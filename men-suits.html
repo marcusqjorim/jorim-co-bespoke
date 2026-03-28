@@ -81,6 +81,7 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
         }
 
         .item img,
@@ -92,23 +93,59 @@
             background: #000;
         }
 
-        .open-link {
-            display: block;
-            text-align: center;
-            color: #fff;
-            background: #202020;
-            text-decoration: none;
-            padding: 8px 10px;
-            font-size: 0.86rem;
+        .viewer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 76px 16px 20px;
+            z-index: 1000;
         }
 
-        .item p {
-            margin: 0;
-            padding: 10px 12px;
-            font-size: 0.9rem;
-            color: var(--muted);
-            text-align: center;
-            word-break: break-word;
+        .viewer.open { display: flex; }
+
+        .viewer-actions {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+            gap: 10px;
+        }
+
+        .viewer-left,
+        .viewer-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .viewer-btn {
+            border: 0;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .viewer-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .viewer img,
+        .viewer video {
+            max-width: min(100%, 980px);
+            max-height: calc(100vh - 120px);
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            background: #000;
         }
 
         @media (max-width: 600px) {
@@ -121,6 +158,7 @@
             }
             .item img,
             .item video { height: 210px; }
+            .viewer-btn { padding: 8px 12px; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -132,17 +170,84 @@
 
     <section class="intro">
         <h1>Men Suits Collection</h1>
-        <p>Photos and videos in one place. Tap to open full media.</p>
+        <p>Tap any photo or video to view full screen.</p>
     </section>
 
-    <section class="gallery" id="gallery"></section>
+    <section class="gallery" id="menGallery"></section>
+
+    <div class="viewer" id="mediaViewer" aria-hidden="true">
+        <div class="viewer-actions">
+            <div class="viewer-left">
+                <a class="viewer-btn" href="index.html">Home</a>
+                <button class="viewer-btn" type="button" id="viewerBack">Back</button>
+            </div>
+            <div class="viewer-right">
+                <button class="viewer-btn" type="button" id="viewerClose">Close</button>
+            </div>
+        </div>
+        <div id="viewerMediaContainer"></div>
+    </div>
 
     <script>
         const folder = "images/Men suits";
         const mediaItems = [{"fileName":"01810432bcb24bcccbd8facd379deb6d.jpg","type":"image"},{"fileName":"01f779cc147ebee2d02099cb6759ea3a.jpg","type":"image"},{"fileName":"020a50da7721c88dac39efbd16e68e9c.jpg","type":"image"},{"fileName":"05524cf33a9049dd8bfca02ea7313f11.jpg","type":"image"},{"fileName":"063ee3ef2841b5877511f698e9971755.jpg","type":"image"},{"fileName":"064345ebd24499f98c906bd2ec41d138.jpg","type":"image"},{"fileName":"0a809bce82e7518c3861ef29e8b0e598.jpg","type":"image"},{"fileName":"0bd87b94cab8c22be5506af9f7979c16.jpg","type":"image"},{"fileName":"0be04ecbae77c068574ad54968a75ec9.jpg","type":"image"},{"fileName":"0d3e97b23892376cab47fd8c7077c05e.jpg","type":"image"},{"fileName":"0e5b3a279e1919a59ad7ac377bb0d403.jpg","type":"image"},{"fileName":"10ef77371fa96c422d194a5e760706d2.jpg","type":"image"},{"fileName":"10f30fdd37c395a78933fc0449e4b19a.jpg","type":"image"},{"fileName":"135e53561cdeee69abd3fd7126768b7c.jpg","type":"image"},{"fileName":"136b1c32590d2b77911992aa3467f38b.jpg","type":"image"},{"fileName":"1878feb5fa51faff5a407604b6079110.jpg","type":"image"},{"fileName":"1d1d3fd3d3f3316db1a4712da482edb8.jpg","type":"image"},{"fileName":"1fbd60f3378fef7239b302e81e255315.jpg","type":"image"},{"fileName":"221363ea1b70cfbd98ee251417e9553b.jpg","type":"image"},{"fileName":"235eac3c498d6b7be556f756da105a9f.jpg","type":"image"},{"fileName":"2ce05a7ff7a558f3238a1cec84b0306c.jpg","type":"image"},{"fileName":"2f3328658371da950fcf7dd49a94bc10.jpg","type":"image"},{"fileName":"307c3b66d9e3b5e671fb6307c5e8ced6.jpg","type":"image"},{"fileName":"32adb3d8aada373f6e925c1fddfeee61.jpg","type":"image"},{"fileName":"32e6a6a182fe32b74089a49f8cf9b574.jpg","type":"image"},{"fileName":"32fab84260c415a81aa2da1856e4bc4c.jpg","type":"image"},{"fileName":"3872fb366eda75a7b5d8ae7a5a366530.jpg","type":"image"},{"fileName":"3b8f73f911cec09026c47d74d226186f.jpg","type":"image"},{"fileName":"3ce7d7577c51dd46ba13a41626762280.jpg","type":"image"},{"fileName":"3f11ac0be49b84ab9a408b771c344213.jpg","type":"image"},{"fileName":"3f1c958291153dbf47a069f379004010.jpg","type":"image"},{"fileName":"417785cc18ae0b4edc2b4f41b9d601ff.mp4","type":"video"},{"fileName":"44675854bcf5b9465788d050a8984e2a.mp4","type":"video"},{"fileName":"4b5fd4233aeae2f8937e415f91080fe4.mp4","type":"video"},{"fileName":"4e47fff13c81743ad1e5eb7aab2cd86c.jpg","type":"image"},{"fileName":"4f241cfda350b39edf3464eb0d5bdae5.jpg","type":"image"},{"fileName":"4f563c42e8fd136180080913e03359db.jpg","type":"image"},{"fileName":"50d176f78c9b6e556b2f398d25e6b04d.jpg","type":"image"},{"fileName":"5144229ed6982d704d5f83cdee558267.jpg","type":"image"},{"fileName":"521f9f39502d2a644acc5a6c26dea618.jpg","type":"image"},{"fileName":"568e30ac88ef95d46b3998250052a7d7.jpg","type":"image"},{"fileName":"56f72aa4f88f9ee7782aae10b8e6ead8.jpg","type":"image"},{"fileName":"5799151e3a9ad10be9e1969b6f7e2ff7.jpg","type":"image"},{"fileName":"5b10fe94bc461d3b9624075b2419d54f.jpg","type":"image"},{"fileName":"5b2341f000065e406d52461430e2fcac.jpg","type":"image"},{"fileName":"5c9463f0d6262bd09d6e1af88722863a.jpg","type":"image"},{"fileName":"5cd2d7fac963bb849a873398d159c8a6.jpg","type":"image"},{"fileName":"5d27f02cb3e4b5f5d4deda3f8149938e.mp4","type":"video"},{"fileName":"5dcd9579374797cc5bfe1079375b1454.jpg","type":"image"},{"fileName":"5e5907425222eb6e8a6cb4e5e491a77d.mp4","type":"video"},{"fileName":"603f8a7b074a8004312ce4cd70221247.jpg","type":"image"},{"fileName":"67fa31d606e6d0797df3e76424ccf220.jpg","type":"image"},{"fileName":"6d73f6b7303ac9adb4df2ca8ce745464.mp4","type":"video"},{"fileName":"6e1720add6196aea68ee32d38cf2bbf9.jpg","type":"image"},{"fileName":"73fdf5048d6900d78da898b99ba9a632.jpg","type":"image"},{"fileName":"75a2ba23e161ce9314ffbcc4a9ddab19.jpg","type":"image"},{"fileName":"77eac7433850f3302559a482b71ad2ce.jpg","type":"image"},{"fileName":"77f17b1a264006cb311203c57650f35a.mp4","type":"video"},{"fileName":"7aea8005d09ed29c68ddecc3e1db6c60.mp4","type":"video"},{"fileName":"7b2e00cac03d2d0536f0f4b673b38362.jpg","type":"image"},{"fileName":"7dd06cc38f363214915cdfd127437d7f.jpg","type":"image"},{"fileName":"81543992a62cd1083ba41c41443c65cf.jpg","type":"image"},{"fileName":"84e2e426dbe104e8b95fcf50da9bcfff.jpg","type":"image"},{"fileName":"8714d587a2e314d12acd6623dfa85e64.jpg","type":"image"},{"fileName":"88c0961775e552c75aa6f971b02717ac.jpg","type":"image"},{"fileName":"89e4aa85b25f1ece3fcc2bf43ea2f715.jpg","type":"image"},{"fileName":"8a1405a13fe6cc3d04d86aa0eed0873a.jpg","type":"image"},{"fileName":"8b6d63e2326fc6c60380b8d54473dd94.jpg","type":"image"},{"fileName":"8d5beaa0e7933ce3400cc1d0cef8d1a6.jpg","type":"image"},{"fileName":"8d80a6fab696ae05db3b8e4190218009.jpg","type":"image"},{"fileName":"93366b6b868a48e77f9ce8b4deac71a2.jpg","type":"image"},{"fileName":"9395c94201053e9d8e262a5404b1ee3d.mp4","type":"video"},{"fileName":"9433e22a71301c03fb4ca716bed92a98.jpg","type":"image"},{"fileName":"947917dff0bf69f3ff34f6e4e5be825b.jpg","type":"image"},{"fileName":"94e9e53412428bcea46105fca1b97439.jpg","type":"image"},{"fileName":"97f47c06e6d699ccb919a6957524140b.jpg","type":"image"},{"fileName":"987776a6988c5ff813037e541cff03c5.jpg","type":"image"},{"fileName":"a5f9b1bf7a4af0be8273cc39687f8f85.mp4","type":"video"},{"fileName":"ad460f3d9d1d7016f6b4ff906e049edd.jpg","type":"image"},{"fileName":"b03c5fc629e1fdbc7162564a6146b646.jpg","type":"image"},{"fileName":"b0b5a0480f64b5e25a5a6b8ef1032096.jpg","type":"image"},{"fileName":"b2bb82d17688d3537bab9e291bbdf46a.jpg","type":"image"},{"fileName":"b2ce814cd960c05f44a3d3fa98e5cef0.jpg","type":"image"},{"fileName":"b4be77e772ea343afb44f367b75c3ba0.jpg","type":"image"},{"fileName":"b4cb0ad04438483540b3be8991a78636.jpg","type":"image"},{"fileName":"b7af363aa5ef3722ac816bff8cb42b8e.jpg","type":"image"},{"fileName":"bcfded8d70d2c40ac1485840c60e8693.jpg","type":"image"},{"fileName":"c4d2fad0b2509df0f72fee02f80facfe.mp4","type":"video"},{"fileName":"c6b601654754e8d1450839b7aab70097.jpg","type":"image"},{"fileName":"c7a492254294eaa815d23ff8d30e2421.jpg","type":"image"},{"fileName":"c8e38177c84a0505717a813e12bcd6b4.mp4","type":"video"},{"fileName":"ca1483879cd3a081d5e83331f0ea4d4e.jpg","type":"image"},{"fileName":"ca5e64abeec4e76fd2f850ec994b779a (1).jpg","type":"image"},{"fileName":"cb68ece4ba6d6722e97d19f760ed2c7b.jpg","type":"image"},{"fileName":"cc7f1798e62531c8b9bc7d48cc90b079.jpg","type":"image"},{"fileName":"cd567c2d40ee4941400f568e2bc6b681.jpg","type":"image"},{"fileName":"ce4c1a40f788c52e20d4335f02ab3c61.jpg","type":"image"},{"fileName":"cecc5ed4cd7713748826783b7ce58e50.jpg","type":"image"},{"fileName":"d07626de549ef2084018d24f51e96fa6.jpg","type":"image"},{"fileName":"d0b29a620835b37ff873cfc19e62ceb1.jpg","type":"image"},{"fileName":"d190d5f636443eed6bd59aafe5601645.jpg","type":"image"},{"fileName":"d7b10b8733e9921752863c2990170cb0.jpg","type":"image"},{"fileName":"d80caca532ec637429fbf0858a348865.jpg","type":"image"},{"fileName":"d9998f7a16ae3b6be831cf9375c4218e.jpg","type":"image"},{"fileName":"dce3d46c8efefe98d2490101d071b8c2.jpg","type":"image"},{"fileName":"df6cb85e9c01119a11aa65ee5616c13b.jpg","type":"image"},{"fileName":"dfe67f2db1c45b648ba254b5cd948a26.jpg","type":"image"},{"fileName":"dff7a91411850e340c37dd03a5fc0b97.jpg","type":"image"},{"fileName":"e16338a9be29afdf15f182a1a148dbbc.jpg","type":"image"},{"fileName":"e18763777952df0698150f4892beb6f6.jpg","type":"image"},{"fileName":"e2554892af4375c9386a62bb24acaeed.mp4","type":"video"},{"fileName":"e5430e1fd6deefb082f748f2f64f0994.jpg","type":"image"},{"fileName":"ea020c553a569c68081d1c4f8d6fbdd2.jpg","type":"image"},{"fileName":"eb30606b7f1f39a69341447a96a06f4f.jpg","type":"image"},{"fileName":"ed117ecc506f159b7a2f1e301911d541.jpg","type":"image"},{"fileName":"f2000491330d6c5ce1d2696e35f01518.jpg","type":"image"},{"fileName":"f37552c08be8c3008e9dc92e0bafc5a6.jpg","type":"image"},{"fileName":"f4e7d5eba1fe815ff0fba25cf8d095fa.jpg","type":"image"},{"fileName":"f855c52806c0db094b55d2689d5884c7.jpg","type":"image"},{"fileName":"f8ac7de8fa2b0db94c81d0ec9932d493.jpg","type":"image"},{"fileName":"fa3b434be3a81112b0d32b9d56b4be92.jpg","type":"image"},{"fileName":"fd6ed298b4161636167c1fe9e905a8cc.jpg","type":"image"},{"fileName":"Screenshot_20250121_113506_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113528_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113553_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113616_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113633_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113648_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113654_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113700_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113706_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113711_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113718_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113725_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113733_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113743_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113755_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113803_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113815_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113824_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113833_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113841_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113847_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113851_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113856_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113903_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113908_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113913_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113917_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113922_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113926_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113931_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113936_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113941_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113946_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113952_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_113957_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_114040_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_114113_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_114119_Pinterest.png","type":"image"},{"fileName":"Screenshot_20250121_114127_Pinterest.png","type":"image"}];
-        const gallery = document.getElementById("gallery");
+        const gallery = document.getElementById("menGallery");
 
-        mediaItems.forEach((itemData, index) => {
+        const viewer = document.getElementById("mediaViewer");
+        const viewerMediaContainer = document.getElementById("viewerMediaContainer");
+        const viewerClose = document.getElementById("viewerClose");
+        const viewerBack = document.getElementById("viewerBack");
+
+        function openViewer(itemData) {
+            viewerMediaContainer.innerHTML = "";
+            const mediaPath = folder + "/" + itemData.fileName;
+
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                viewerMediaContainer.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Men Suits media";
+                viewerMediaContainer.appendChild(image);
+            }
+
+            viewer.classList.add("open");
+            viewer.setAttribute("aria-hidden", "false");
+        }
+
+        function closeViewer() {
+            viewer.classList.remove("open");
+            viewer.setAttribute("aria-hidden", "true");
+            viewerMediaContainer.innerHTML = "";
+        }
+
+        viewerClose.addEventListener("click", closeViewer);
+        viewerBack.addEventListener("click", () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                closeViewer();
+            }
+        });
+
+        viewer.addEventListener("click", (event) => {
+            if (event.target === viewer) {
+                closeViewer();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && viewer.classList.contains("open")) {
+                closeViewer();
+            }
+        });
+
+        mediaItems.forEach((itemData) => {
             const item = document.createElement("article");
             item.className = "item";
 
@@ -156,32 +261,14 @@
                 video.playsInline = true;
                 item.appendChild(video);
             } else {
-                const link = document.createElement("a");
-                link.href = mediaPath;
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
-
                 const image = document.createElement("img");
                 image.src = mediaPath;
-                image.alt = "Men Suits media " + (index + 1);
+                image.alt = "Men Suits media";
                 image.loading = "lazy";
-
-                link.appendChild(image);
-                item.appendChild(link);
+                item.appendChild(image);
             }
 
-            const openLink = document.createElement("a");
-            openLink.className = "open-link";
-            openLink.href = mediaPath;
-            openLink.target = "_blank";
-            openLink.rel = "noopener noreferrer";
-            openLink.textContent = itemData.type === "video" ? "Open video" : "Open photo";
-
-            const label = document.createElement("p");
-            label.textContent = (itemData.type === "video" ? "Video " : "Design ") + (index + 1);
-
-            item.appendChild(openLink);
-            item.appendChild(label);
+            item.addEventListener("click", () => openViewer(itemData));
             gallery.appendChild(item);
         });
     </script>
