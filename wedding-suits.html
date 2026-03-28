@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wedding Suits collection by JORIM & CO. BESPOKE.">
+    <title>Wedding Suits | JORIM & CO. BESPOKE</title>
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <style>
+        :root {
+            --bg: #f5f5f5;
+            --card: #ffffff;
+            --text: #1f1f1f;
+            --muted: #616161;
+            --accent: #0b5d8b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: var(--card);
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #fff;
+            background: var(--accent);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-link:hover { opacity: 0.9; }
+
+        .intro {
+            padding: 32px 6% 14px;
+            text-align: center;
+        }
+
+        .intro h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        .intro p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .gallery {
+            padding: 20px 6% 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .item {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+
+        .item img,
+        .item video {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            background: #000;
+        }
+
+        .viewer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 76px 16px 20px;
+            z-index: 1000;
+        }
+
+        .viewer.open { display: flex; }
+
+        .viewer-actions {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+            gap: 10px;
+        }
+
+        .viewer-left,
+        .viewer-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .viewer-btn {
+            border: 0;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .viewer-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .viewer img,
+        .viewer video {
+            max-width: min(100%, 980px);
+            max-height: calc(100vh - 120px);
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            background: #000;
+        }
+
+        @media (max-width: 600px) {
+            .title { font-size: 0.95rem; }
+            .back-link { padding: 8px 12px; font-size: 0.9rem; }
+            .intro h1 { font-size: 1.5rem; }
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 12px;
+            }
+            .item img,
+            .item video { height: 210px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="title">JORIM & CO. BESPOKE</div>
+        <a class="back-link" href="index.html">Back to Home</a>
+    </header>
+
+    <section class="intro">
+        <h1>Wedding Suits Collection</h1>
+        <p>Tap any photo or video to view full screen.</p>
+    </section>
+
+    <section class="gallery" id="weddingGallery"></section>
+
+    <div class="viewer" id="mediaViewer" aria-hidden="true">
+        <div class="viewer-actions">
+            <div class="viewer-left">
+                <a class="viewer-btn" href="index.html">Home</a>
+                <button class="viewer-btn" type="button" id="viewerBack">Back</button>
+            </div>
+            <div class="viewer-right">
+                <button class="viewer-btn" type="button" id="viewerClose">Close</button>
+            </div>
+        </div>
+        <div id="viewerMediaContainer"></div>
+    </div>
+
+    <script>
+        const folder = "images/WEDDING SUITS";
+        const mediaItems = [{"fileName":"IMG-20230306-WA0022.jpg","type":"image"},{"fileName":"IMG-20230306-WA0024.jpg","type":"image"},{"fileName":"IMG-20230306-WA0026.jpg","type":"image"},{"fileName":"IMG-20230306-WA0027.jpg","type":"image"},{"fileName":"IMG-20230306-WA0028.jpg","type":"image"},{"fileName":"IMG-20230306-WA0029.jpg","type":"image"},{"fileName":"IMG-20230306-WA0031.jpg","type":"image"},{"fileName":"IMG-20230306-WA0032.jpg","type":"image"},{"fileName":"IMG-20230306-WA0033.jpg","type":"image"},{"fileName":"IMG-20230306-WA0034.jpg","type":"image"},{"fileName":"IMG-20230306-WA0035.jpg","type":"image"},{"fileName":"IMG-20230306-WA0036.jpg","type":"image"},{"fileName":"IMG-20230306-WA0037.jpg","type":"image"},{"fileName":"IMG-20230306-WA0038.jpg","type":"image"},{"fileName":"IMG-20230306-WA0039.jpg","type":"image"},{"fileName":"IMG-20230306-WA0042.jpg","type":"image"},{"fileName":"IMG-20230306-WA0043.jpg","type":"image"},{"fileName":"IMG-20230306-WA0044.jpg","type":"image"},{"fileName":"IMG-20230306-WA0045.jpg","type":"image"},{"fileName":"IMG-20230306-WA0046.jpg","type":"image"},{"fileName":"IMG-20230306-WA0047.jpg","type":"image"},{"fileName":"IMG-20230306-WA0048.jpg","type":"image"},{"fileName":"IMG-20230306-WA0049.jpg","type":"image"},{"fileName":"IMG-20230306-WA0050.jpg","type":"image"},{"fileName":"IMG-20230306-WA0051.jpg","type":"image"},{"fileName":"IMG-20230306-WA0052.jpg","type":"image"},{"fileName":"IMG-20230306-WA0053.jpg","type":"image"},{"fileName":"IMG-20230306-WA0054.jpg","type":"image"},{"fileName":"IMG-20230306-WA0055.jpg","type":"image"},{"fileName":"IMG-20230306-WA0056.jpg","type":"image"},{"fileName":"IMG-20230306-WA0057.jpg","type":"image"},{"fileName":"IMG-20230306-WA0058.jpg","type":"image"},{"fileName":"IMG-20230306-WA0059.jpg","type":"image"}];
+        const gallery = document.getElementById("weddingGallery");
+
+        const viewer = document.getElementById("mediaViewer");
+        const viewerMediaContainer = document.getElementById("viewerMediaContainer");
+        const viewerClose = document.getElementById("viewerClose");
+        const viewerBack = document.getElementById("viewerBack");
+
+        function openViewer(itemData) {
+            viewerMediaContainer.innerHTML = "";
+            const mediaPath = folder + "/" + itemData.fileName;
+
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                viewerMediaContainer.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Wedding Suits media";
+                viewerMediaContainer.appendChild(image);
+            }
+
+            viewer.classList.add("open");
+            viewer.setAttribute("aria-hidden", "false");
+        }
+
+        function closeViewer() {
+            viewer.classList.remove("open");
+            viewer.setAttribute("aria-hidden", "true");
+            viewerMediaContainer.innerHTML = "";
+        }
+
+        viewerClose.addEventListener("click", closeViewer);
+        viewerBack.addEventListener("click", () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                closeViewer();
+            }
+        });
+
+        viewer.addEventListener("click", (event) => {
+            if (event.target === viewer) {
+                closeViewer();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && viewer.classList.contains("open")) {
+                closeViewer();
+            }
+        });
+
+        mediaItems.forEach((itemData) => {
+            const item = document.createElement("article");
+            item.className = "item";
+
+            const mediaPath = folder + "/" + itemData.fileName;
+
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.preload = "metadata";
+                video.playsInline = true;
+                item.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Wedding Suits media";
+                image.loading = "lazy";
+                item.appendChild(image);
+            }
+
+            item.addEventListener("click", () => openViewer(itemData));
+            gallery.appendChild(item);
+        });
+    </script>
+</body>
+</html>
