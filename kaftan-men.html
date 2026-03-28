@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,9 +15,7 @@
             --accent: #0b5d8b;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -54,9 +52,7 @@
             transition: opacity 0.2s ease;
         }
 
-        .back-link:hover {
-            opacity: 0.9;
-        }
+        .back-link:hover { opacity: 0.9; }
 
         .intro {
             padding: 32px 6% 14px;
@@ -85,45 +81,84 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
         }
 
-        .item img {
+        .item img,
+        .item video {
             width: 100%;
             height: 280px;
             object-fit: cover;
             display: block;
+            background: #000;
         }
 
-        .item p {
-            margin: 0;
-            padding: 10px 12px;
-            font-size: 0.9rem;
-            color: var(--muted);
-            text-align: center;
+        .viewer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 76px 16px 20px;
+            z-index: 1000;
+        }
+
+        .viewer.open { display: flex; }
+
+        .viewer-actions {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+            gap: 10px;
+        }
+
+        .viewer-left,
+        .viewer-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .viewer-btn {
+            border: 0;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .viewer-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .viewer img,
+        .viewer video {
+            max-width: min(100%, 980px);
+            max-height: calc(100vh - 120px);
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            background: #000;
         }
 
         @media (max-width: 600px) {
-            .title {
-                font-size: 0.95rem;
-            }
-
-            .back-link {
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
-
-            .intro h1 {
-                font-size: 1.5rem;
-            }
-
+            .title { font-size: 0.95rem; }
+            .back-link { padding: 8px 12px; font-size: 0.9rem; }
+            .intro h1 { font-size: 1.5rem; }
             .gallery {
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
                 gap: 12px;
             }
-
-            .item img {
-                height: 210px;
-            }
+            .item img,
+            .item video { height: 210px; }
+            .viewer-btn { padding: 8px 12px; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -135,80 +170,105 @@
 
     <section class="intro">
         <h1>Kaftan Men Collection</h1>
-        <p>Tap any photo to view it clearly.</p>
+        <p>Tap any photo or video to view full screen.</p>
     </section>
 
     <section class="gallery" id="kaftanGallery"></section>
 
-    <script>
-        const kaftanImages = [
-            "01abad1f765af92c884491e8c3062640.jpg",
-            "01c53174ca5a434b42843ce003742ffa.jpg",
-            "02b1983bfa47eed4cfbadefdca4527d9.jpg",
-            "02fa353659a16ca4ae04ac24d7c312d9.jpg",
-            "03da2195efade9fc7aba9509b2b330c9.jpg",
-            "0620a804d471b0f14d7c396172372731.jpg",
-            "09190c890d837d6582d1a2d3680a8521.jpg",
-            "0e198ceef419e44a620d6b7d44bc250a.jpg",
-            "199d198d963b7a965b6bbb37be08cc53.jpg",
-            "29d8a991e2d0af2693c8b92fc9dce4d9.jpg",
-            "2a951483ec8af0fd8ab51809dc8a462d.jpg",
-            "2dc9f9b5b7341f7d7c6c0c02b6b0a8ca.jpg",
-            "304bc4d6b79c6ea7e59e1e58a1cbd5e2.jpg",
-            "3e90a017e0891fe7b28f9f3a24d04118.jpg",
-            "4452fe3652b8c57137a63eefefa9a5dd.jpg",
-            "4a6c15ae5f4e36b11a56247b95c626e3.jpg",
-            "4e4a798a605080e568d9208ebab744b4.jpg",
-            "5ccd044d624906fb4277bf0fb8aabe1f.jpg",
-            "71ecdf5ae537b167db80c3b3c05a2daa.jpg",
-            "726da3ced6893c610745c22a41fa4052.jpg",
-            "72f76d96f6bc0b4fcb60cdf8867d292c.jpg",
-            "7f6d54534951d3e7b0215b8f24618d5f.jpg",
-            "81bb8db2d3cbf201140d4beef74707d9.jpg",
-            "87e4520164b85235160040df2c360a65.jpg",
-            "88cbaaa739bf2dd419efaa53559f36df.jpg",
-            "8cfb24abdf8558c44debac69973da994.jpg",
-            "8f153ab00cd850ec207b212eaad9e64d.jpg",
-            "9037ae565d86e6498b32be5bfd46f513.jpg",
-            "9539e452c79eb6234b4d5d6612f0b0af.jpg",
-            "971652e311e0dd08e263be82af629d20.jpg",
-            "a3eb14597a9e1945b9c185cb1dc8238e.jpg",
-            "b54302fb23126b67c06435467b6816d7.jpg",
-            "c1530fe7e8878f0d3ebe2bb30f93ea84.jpg",
-            "c83822f840d6db0109b1ef8e1eecac47.jpg",
-            "c91ebcbccc3fdbe9c2267e14f4cfdc15.jpg",
-            "c9c36420ca919f7c5d57c004a066cc9b.jpg",
-            "d4444b91bdf92ce8f0767257c8d5bd9d.jpg",
-            "d5d3fbec33fad7709b9f0d941a88e8bd.jpg",
-            "dda57c759fc9aa5051c0496c15112c3c.jpg",
-            "e02667d3483b11d0dbff164ae537bba9.jpg",
-            "e44a335b812463a2dfa9de911b5ad754.jpg",
-            "ed8e1847131a22dfa981e9f1eef98c6f.jpg",
-            "fc655246c0a99896c853c9fc1b3ee60d.jpg"
-        ];
+    <div class="viewer" id="mediaViewer" aria-hidden="true">
+        <div class="viewer-actions">
+            <div class="viewer-left">
+                <a class="viewer-btn" href="index.html">Home</a>
+                <button class="viewer-btn" type="button" id="viewerBack">Back</button>
+            </div>
+            <div class="viewer-right">
+                <button class="viewer-btn" type="button" id="viewerClose">Close</button>
+            </div>
+        </div>
+        <div id="viewerMediaContainer"></div>
+    </div>
 
+    <script>
+        const folder = "images/Kaftan Men";
+        const mediaItems = [{"fileName":"01abad1f765af92c884491e8c3062640.jpg","type":"image"},{"fileName":"01c53174ca5a434b42843ce003742ffa.jpg","type":"image"},{"fileName":"02b1983bfa47eed4cfbadefdca4527d9.jpg","type":"image"},{"fileName":"02fa353659a16ca4ae04ac24d7c312d9.jpg","type":"image"},{"fileName":"03da2195efade9fc7aba9509b2b330c9.jpg","type":"image"},{"fileName":"0620a804d471b0f14d7c396172372731.jpg","type":"image"},{"fileName":"09190c890d837d6582d1a2d3680a8521.jpg","type":"image"},{"fileName":"0e198ceef419e44a620d6b7d44bc250a.jpg","type":"image"},{"fileName":"199d198d963b7a965b6bbb37be08cc53.jpg","type":"image"},{"fileName":"29d8a991e2d0af2693c8b92fc9dce4d9.jpg","type":"image"},{"fileName":"2a951483ec8af0fd8ab51809dc8a462d.jpg","type":"image"},{"fileName":"2dc9f9b5b7341f7d7c6c0c02b6b0a8ca.jpg","type":"image"},{"fileName":"304bc4d6b79c6ea7e59e1e58a1cbd5e2.jpg","type":"image"},{"fileName":"3e90a017e0891fe7b28f9f3a24d04118.jpg","type":"image"},{"fileName":"4452fe3652b8c57137a63eefefa9a5dd.jpg","type":"image"},{"fileName":"4a6c15ae5f4e36b11a56247b95c626e3.jpg","type":"image"},{"fileName":"4e4a798a605080e568d9208ebab744b4.jpg","type":"image"},{"fileName":"5ccd044d624906fb4277bf0fb8aabe1f.jpg","type":"image"},{"fileName":"71ecdf5ae537b167db80c3b3c05a2daa.jpg","type":"image"},{"fileName":"726da3ced6893c610745c22a41fa4052.jpg","type":"image"},{"fileName":"72f76d96f6bc0b4fcb60cdf8867d292c.jpg","type":"image"},{"fileName":"7f6d54534951d3e7b0215b8f24618d5f.jpg","type":"image"},{"fileName":"81bb8db2d3cbf201140d4beef74707d9.jpg","type":"image"},{"fileName":"87e4520164b85235160040df2c360a65.jpg","type":"image"},{"fileName":"88cbaaa739bf2dd419efaa53559f36df.jpg","type":"image"},{"fileName":"8cfb24abdf8558c44debac69973da994.jpg","type":"image"},{"fileName":"8f153ab00cd850ec207b212eaad9e64d.jpg","type":"image"},{"fileName":"9037ae565d86e6498b32be5bfd46f513.jpg","type":"image"},{"fileName":"9539e452c79eb6234b4d5d6612f0b0af.jpg","type":"image"},{"fileName":"971652e311e0dd08e263be82af629d20.jpg","type":"image"},{"fileName":"a3eb14597a9e1945b9c185cb1dc8238e.jpg","type":"image"},{"fileName":"b54302fb23126b67c06435467b6816d7.jpg","type":"image"},{"fileName":"c1530fe7e8878f0d3ebe2bb30f93ea84.jpg","type":"image"},{"fileName":"c83822f840d6db0109b1ef8e1eecac47.jpg","type":"image"},{"fileName":"c91ebcbccc3fdbe9c2267e14f4cfdc15.jpg","type":"image"},{"fileName":"c9c36420ca919f7c5d57c004a066cc9b.jpg","type":"image"},{"fileName":"d4444b91bdf92ce8f0767257c8d5bd9d.jpg","type":"image"},{"fileName":"d5d3fbec33fad7709b9f0d941a88e8bd.jpg","type":"image"},{"fileName":"dda57c759fc9aa5051c0496c15112c3c.jpg","type":"image"},{"fileName":"e02667d3483b11d0dbff164ae537bba9.jpg","type":"image"},{"fileName":"e44a335b812463a2dfa9de911b5ad754.jpg","type":"image"},{"fileName":"ed8e1847131a22dfa981e9f1eef98c6f.jpg","type":"image"},{"fileName":"fc655246c0a99896c853c9fc1b3ee60d.jpg","type":"image"}];
         const gallery = document.getElementById("kaftanGallery");
 
-        kaftanImages.forEach((fileName, index) => {
+        const viewer = document.getElementById("mediaViewer");
+        const viewerMediaContainer = document.getElementById("viewerMediaContainer");
+        const viewerClose = document.getElementById("viewerClose");
+        const viewerBack = document.getElementById("viewerBack");
+
+        function openViewer(itemData) {
+            viewerMediaContainer.innerHTML = "";
+            const mediaPath = folder + "/" + itemData.fileName;
+
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                viewerMediaContainer.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Kaftan Men media";
+                viewerMediaContainer.appendChild(image);
+            }
+
+            viewer.classList.add("open");
+            viewer.setAttribute("aria-hidden", "false");
+        }
+
+        function closeViewer() {
+            viewer.classList.remove("open");
+            viewer.setAttribute("aria-hidden", "true");
+            viewerMediaContainer.innerHTML = "";
+        }
+
+        viewerClose.addEventListener("click", closeViewer);
+        viewerBack.addEventListener("click", () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                closeViewer();
+            }
+        });
+
+        viewer.addEventListener("click", (event) => {
+            if (event.target === viewer) {
+                closeViewer();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && viewer.classList.contains("open")) {
+                closeViewer();
+            }
+        });
+
+        mediaItems.forEach((itemData) => {
             const item = document.createElement("article");
             item.className = "item";
 
-            const link = document.createElement("a");
-            link.href = `images/Kaftan Men/${fileName}`;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
+            const mediaPath = folder + "/" + itemData.fileName;
 
-            const image = document.createElement("img");
-            image.src = `images/Kaftan Men/${fileName}`;
-            image.alt = `Kaftan Men design ${index + 1}`;
-            image.loading = "lazy";
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.preload = "metadata";
+                video.playsInline = true;
+                item.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Kaftan Men media";
+                image.loading = "lazy";
+                item.appendChild(image);
+            }
 
-            const label = document.createElement("p");
-            label.textContent = `Design ${index + 1}`;
-
-            link.appendChild(image);
-            item.appendChild(link);
-            item.appendChild(label);
+            item.addEventListener("click", () => openViewer(itemData));
             gallery.appendChild(item);
         });
     </script>
