@@ -81,22 +81,71 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
         }
 
-        .item img {
+        .item img,
+        .item video {
             width: 100%;
             height: 280px;
             object-fit: cover;
             display: block;
+            background: #000;
         }
 
-        .item p {
-            margin: 0;
-            padding: 10px 12px;
-            font-size: 0.9rem;
-            color: var(--muted);
-            text-align: center;
-            word-break: break-word;
+        .viewer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 76px 16px 20px;
+            z-index: 1000;
+        }
+
+        .viewer.open { display: flex; }
+
+        .viewer-actions {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+            gap: 10px;
+        }
+
+        .viewer-left,
+        .viewer-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .viewer-btn {
+            border: 0;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .viewer-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .viewer img,
+        .viewer video {
+            max-width: min(100%, 980px);
+            max-height: calc(100vh - 120px);
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            background: #000;
         }
 
         @media (max-width: 600px) {
@@ -107,7 +156,9 @@
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
                 gap: 12px;
             }
-            .item img { height: 210px; }
+            .item img,
+            .item video { height: 210px; }
+            .viewer-btn { padding: 8px 12px; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -119,36 +170,105 @@
 
     <section class="intro">
         <h1>Women Suits Collection</h1>
-        <p>Tap any photo to view it clearly.</p>
+        <p>Tap any photo or video to view full screen.</p>
     </section>
 
-    <section class="gallery" id="gallery"></section>
+    <section class="gallery" id="womenGallery"></section>
+
+    <div class="viewer" id="mediaViewer" aria-hidden="true">
+        <div class="viewer-actions">
+            <div class="viewer-left">
+                <a class="viewer-btn" href="index.html">Home</a>
+                <button class="viewer-btn" type="button" id="viewerBack">Back</button>
+            </div>
+            <div class="viewer-right">
+                <button class="viewer-btn" type="button" id="viewerClose">Close</button>
+            </div>
+        </div>
+        <div id="viewerMediaContainer"></div>
+    </div>
 
     <script>
         const folder = "images/Women Suits";
-        const images = ["0a3e550b97412fcc91297e44b076ef23.jpg","0de91f9a8c321aeecd36c03f7f41233c.jpg","10e76cec20ee4fdd6a47a2552f8d8056.jpg","1cdcda566e24c56ecbd2b44ace2509f8.jpg","1e2181a4f61c2ce65707c87dd6ac1a6e.jpg","1e5db6bd17095bfc9263e51eb27dbbdd.jpg","23c495a9a31a2d97f12f1d82febd1593.jpg","278d057640d751e47bcf5122cce79ef9.jpg","2921a4ee1bb94bf88ab5bf0956f71576.jpg","32b3a5267cc0c6764ab1da68b561090c.jpg","3ba984bce5c47dca07559bc3e4dd7d8f.jpg","5f0c9fd5f79a66bce012baa647c802f9.jpg","686d3e6c300d9ba7842b3de7f66b9218.jpg","68bd97079c0ea7fb62ec3394e7ed6776.jpg","6d5359681894118764e732cbed4c47f1.jpg","7dffe1f7d62882c1c17acc3b73052b32.jpg","81dfc6aee82a2814c69269397872dbb8.jpg","85b812861029507d8a6bf6d1dc39f981.jpg","8bdb54ae464cc9dae129f90cb4facc70.jpg","90885764d27d00749c653b48be4031e3.jpg","a2426db94729c2db6999ba1f6331ad1b.jpg","a2a566e2c315fe49140846fd4b16d2df.jpg","a63f549972497b468ccc638cc2537ae1.jpg","a7d996dae43d15b61f479a7b53f1b1d6.jpg","b0084b29453b565a0210783f73cdd81c.jpg","b541dfef4907900825f491c8718bc097.jpg","c9a4d5dbd82c45e5b0b7adf10deaa81f.jpg","e31de3fed483c8dde81bc2403eba6e82.jpg","e6bc515277f1250afd4d96491b766823.jpg","e90fcdc45b39961be2f57cb3fae665b7.jpg","f022bbe5c17118d3dce37923fc19e6c8.jpg","f71a5b70a55ad67b966b229afd3ddac1.jpg","f96867bd51049b999e16cdd764837613.jpg"];
-        const gallery = document.getElementById("gallery");
+        const mediaItems = [{"fileName":"0a3e550b97412fcc91297e44b076ef23.jpg","type":"image"},{"fileName":"0de91f9a8c321aeecd36c03f7f41233c.jpg","type":"image"},{"fileName":"10e76cec20ee4fdd6a47a2552f8d8056.jpg","type":"image"},{"fileName":"175fa3dd5aa43aadb29ea52f2c819a7c.mp4","type":"video"},{"fileName":"1cdcda566e24c56ecbd2b44ace2509f8.jpg","type":"image"},{"fileName":"1e2181a4f61c2ce65707c87dd6ac1a6e.jpg","type":"image"},{"fileName":"1e5db6bd17095bfc9263e51eb27dbbdd.jpg","type":"image"},{"fileName":"23c495a9a31a2d97f12f1d82febd1593.jpg","type":"image"},{"fileName":"278d057640d751e47bcf5122cce79ef9.jpg","type":"image"},{"fileName":"2921a4ee1bb94bf88ab5bf0956f71576.jpg","type":"image"},{"fileName":"32b3a5267cc0c6764ab1da68b561090c.jpg","type":"image"},{"fileName":"3ba984bce5c47dca07559bc3e4dd7d8f.jpg","type":"image"},{"fileName":"4d84bfef4650d2c41866d3846cabba1a.mp4","type":"video"},{"fileName":"5f0c9fd5f79a66bce012baa647c802f9.jpg","type":"image"},{"fileName":"686d3e6c300d9ba7842b3de7f66b9218.jpg","type":"image"},{"fileName":"68bd97079c0ea7fb62ec3394e7ed6776.jpg","type":"image"},{"fileName":"6d5359681894118764e732cbed4c47f1.jpg","type":"image"},{"fileName":"73752dcf7efc9b02269d91cb08312d1f.mp4","type":"video"},{"fileName":"7dffe1f7d62882c1c17acc3b73052b32.jpg","type":"image"},{"fileName":"81dfc6aee82a2814c69269397872dbb8.jpg","type":"image"},{"fileName":"85b812861029507d8a6bf6d1dc39f981.jpg","type":"image"},{"fileName":"8bdb54ae464cc9dae129f90cb4facc70.jpg","type":"image"},{"fileName":"90885764d27d00749c653b48be4031e3.jpg","type":"image"},{"fileName":"a2426db94729c2db6999ba1f6331ad1b.jpg","type":"image"},{"fileName":"a2a566e2c315fe49140846fd4b16d2df.jpg","type":"image"},{"fileName":"a63f549972497b468ccc638cc2537ae1.jpg","type":"image"},{"fileName":"a7d996dae43d15b61f479a7b53f1b1d6.jpg","type":"image"},{"fileName":"b0084b29453b565a0210783f73cdd81c.jpg","type":"image"},{"fileName":"b541dfef4907900825f491c8718bc097.jpg","type":"image"},{"fileName":"c9a4d5dbd82c45e5b0b7adf10deaa81f.jpg","type":"image"},{"fileName":"e31de3fed483c8dde81bc2403eba6e82.jpg","type":"image"},{"fileName":"e6bc515277f1250afd4d96491b766823.jpg","type":"image"},{"fileName":"e90fcdc45b39961be2f57cb3fae665b7.jpg","type":"image"},{"fileName":"f022bbe5c17118d3dce37923fc19e6c8.jpg","type":"image"},{"fileName":"f71a5b70a55ad67b966b229afd3ddac1.jpg","type":"image"},{"fileName":"f96867bd51049b999e16cdd764837613.jpg","type":"image"}];
+        const gallery = document.getElementById("womenGallery");
 
-        images.forEach((fileName, index) => {
+        const viewer = document.getElementById("mediaViewer");
+        const viewerMediaContainer = document.getElementById("viewerMediaContainer");
+        const viewerClose = document.getElementById("viewerClose");
+        const viewerBack = document.getElementById("viewerBack");
+
+        function openViewer(itemData) {
+            viewerMediaContainer.innerHTML = "";
+            const mediaPath = folder + "/" + itemData.fileName;
+
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                viewerMediaContainer.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Women Suits media";
+                viewerMediaContainer.appendChild(image);
+            }
+
+            viewer.classList.add("open");
+            viewer.setAttribute("aria-hidden", "false");
+        }
+
+        function closeViewer() {
+            viewer.classList.remove("open");
+            viewer.setAttribute("aria-hidden", "true");
+            viewerMediaContainer.innerHTML = "";
+        }
+
+        viewerClose.addEventListener("click", closeViewer);
+        viewerBack.addEventListener("click", () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                closeViewer();
+            }
+        });
+
+        viewer.addEventListener("click", (event) => {
+            if (event.target === viewer) {
+                closeViewer();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && viewer.classList.contains("open")) {
+                closeViewer();
+            }
+        });
+
+        mediaItems.forEach((itemData) => {
             const item = document.createElement("article");
             item.className = "item";
 
-            const link = document.createElement("a");
-            link.href = folder + "/" + fileName;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
+            const mediaPath = folder + "/" + itemData.fileName;
 
-            const image = document.createElement("img");
-            image.src = folder + "/" + fileName;
-            image.alt = "Women Suits design " + (index + 1);
-            image.loading = "lazy";
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.preload = "metadata";
+                video.playsInline = true;
+                item.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Women Suits media";
+                image.loading = "lazy";
+                item.appendChild(image);
+            }
 
-            const label = document.createElement("p");
-            label.textContent = "Design " + (index + 1);
-
-            link.appendChild(image);
-            item.appendChild(link);
-            item.appendChild(label);
+            item.addEventListener("click", () => openViewer(itemData));
             gallery.appendChild(item);
         });
     </script>
