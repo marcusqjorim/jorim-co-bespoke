@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Custom tailoring and fashion design by Jorim & CO. Bespoke fashion that speaks to your unique style.">
+    <title> Jorim & CO.</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="shortcut icon" href="images/logo.png" type="images/x-icon" />
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="images/logo.png" alt="Jorim & CO. Logo" class="animate__animated animate__fadeIn">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-background">
+            <img src="images/background.jpg" alt="Fashion Background">
+        </div>
+    
+        <div class="hero-content animate__animated animate__fadeInUp">
+            <h2>Transforming Your Vision into Unique Fashion</h2>
+            <p>At <strong>Jorim & Co.</strong>, we specialize in custom tailoring and fashion design that lets you express your unique style.</p>
+            <p>From premium men's suits to sophisticated women's attire, we craft clothing that fits perfectly and makes a statement.</p>
+            <button><a href="contact.html">Get Started</a></button>
+        </div>
+    
+        <div class="hero-carousel">
+            <img src="images/kaftan.jpg" alt="Elegant Men's Suit">
+            <img src="images/women.jpg" alt="Classic Formal Wear">
+            <img src="images/men.jpg" alt="Bespoke Tailoring">
+        </div>
+    </section>
+    
+    
+
+    <!-- About Section -->
+    <section class="about-section">
+        <h2 class="animate__animated animate__fadeIn">About Us</h2>
+        <p class="animate__animated animate__fadeIn">At Jorim & CO. Bespoke, we craft custom-made suits for both men and women. Our mission is to provide unique, high-quality garments that fit you perfectly and make a statement.</p>
+        <p class="animate__animated animate__fadeIn">With a focus on attention to detail, we create timeless pieces that combine elegance, style, and comfort.</p>
+    </section>
+
+    <!-- Featured Designs -->
+    <section class="featured-designs">
+        <h2 class="animate__animated animate__fadeIn">Featured Designs</h2>
+        <div class="design-gallery">
+            <div class="design-item animate__animated animate__fadeIn">
+                <img src="images/men.jpg" alt="Custom Suit for Men">
+                <p>Custom Suit for Men</p>
+            </div>
+            <div class="design-item animate__animated animate__fadeIn">
+                <img src="images/women.jpg" alt="Women's Bespoke Suit">
+                <p>Women's Bespoke Suit</p>
+            </div>
+            <div class="design-item animate__animated animate__fadeIn">
+                <img src="images/kaftan3.jpg" alt="Office Suit Collection">
+                <p>Men Collection</p>
+            </div>
+            <div class="design-item animate__animated animate__fadeIn">
+                <img src="images/kaunda3.jpg" alt="Kaunda Suits">
+                <p>Kaunda Clothings</p>
+            </div>
+            <div class="design-item animate__animated animate__fadeIn">
+                <img src="images/wedding suit.jpg" alt="Men Suits">
+                <p>Wedding Suits</p>
+            </div>
+            <div class="design-item animate__animated animate__fadeIn">
+                <img src="images/grad.jpg" alt="Graduation">
+                <p>Graduation Suits</p>
+            </div>
+            <div class="design-item animate__animated animate__fadeIn">
+                <img src="images/other collections.jpg" alt="Other Collections">
+                <p>Other Collections</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <h2 class="animate__animated animate__fadeIn">What Clients Say</h2>
+        <div class="testimonial-item animate__animated animate__fadeIn">
+            <p>"Jorim & CO. made the best suit I've ever worn! The attention to detail and personalized service made the whole experience amazing. Highly recommend!"</p>
+            <p>- Raheem S.</p>
+        </div>
+        <div class="testimonial-item animate__animated animate__fadeIn">
+            <p>"The women's suit I got from Jorim & CO. fits like a glove. I've never had such a perfect fit before. Their expertise is unmatched."</p>
+            <p>- Emily R.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 JORIM & CO. BESPOKE. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Add animations on scroll
+            $(window).scroll(function () {
+                $('.animate__animated').each(function () {
+                    const elementPosition = $(this).offset().top;
+                    const scrollPosition = $(window).scrollTop() + $(window).height();
+                    if (scrollPosition > elementPosition) {
+                        $(this).addClass('animate__fadeIn');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
