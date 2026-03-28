@@ -136,6 +136,10 @@ nav ul li a:hover {
     opacity: 0.8;
 }
 
+.hero-carousel a {
+    display: inline-block;
+}
+
 /* Scroll animation */
 @keyframes fadeInUp {
     from {
