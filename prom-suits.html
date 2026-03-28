@@ -76,6 +76,26 @@
             gap: 16px;
         }
 
+        .load-more-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 0 6% 40px;
+        }
+
+        .load-more-btn {
+            border: 0;
+            background: #0b5d8b;
+            color: #fff;
+            border-radius: 999px;
+            padding: 11px 18px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .load-more-btn:hover {
+            opacity: 0.9;
+        }
+
         .item {
             background: var(--card);
             border-radius: 12px;
@@ -173,6 +193,9 @@
     </section>
 
     <section class="gallery" id="promGallery"></section>
+    <div class="load-more-wrap">
+        <button type="button" class="load-more-btn" id="loadMoreBtn">Load More</button>
+    </div>
 
     <div class="viewer" id="mediaViewer" aria-hidden="true">
         <div class="viewer-actions">
@@ -191,6 +214,9 @@
         const folder = "images/Prom suits";
         const mediaItems = [{"fileName":"20220611_132258.jpg","type":"image"},{"fileName":"20220611_132428.jpg","type":"image"},{"fileName":"20220611_132458.jpg","type":"image"},{"fileName":"20220611_132515.jpg","type":"image"},{"fileName":"20220611_132622.jpg","type":"image"},{"fileName":"20220611_132625.jpg","type":"image"},{"fileName":"20220611_133336.jpg","type":"image"},{"fileName":"20220611_133438.jpg","type":"image"},{"fileName":"20220611_133757.jpg","type":"image"},{"fileName":"20220611_133829.jpg","type":"image"},{"fileName":"20220611_135148.jpg","type":"image"},{"fileName":"20220611_135220.jpg","type":"image"},{"fileName":"20220611_135223.jpg","type":"image"},{"fileName":"20220611_135335.jpg","type":"image"},{"fileName":"20220611_135651.jpg","type":"image"},{"fileName":"20220611_135708.jpg","type":"image"},{"fileName":"20220611_135739.jpg","type":"image"},{"fileName":"20220611_135754.jpg","type":"image"},{"fileName":"20220611_142653.jpg","type":"image"},{"fileName":"20220611_142745.jpg","type":"image"},{"fileName":"20220611_142759.jpg","type":"image"},{"fileName":"20220611_192653.jpg","type":"image"},{"fileName":"20220611_192947.jpg","type":"image"},{"fileName":"20220611_193432.jpg","type":"image"},{"fileName":"20220611_193756.jpg","type":"image"},{"fileName":"20220611_193800.jpg","type":"image"},{"fileName":"20220611_193812.jpg","type":"image"},{"fileName":"20220611_194606.jpg","type":"image"},{"fileName":"20220611_195606.jpg","type":"image"},{"fileName":"20220611_195608.jpg","type":"image"},{"fileName":"20220611_205511.jpg","type":"image"},{"fileName":"20220611_205539.jpg","type":"image"},{"fileName":"b7af363aa5ef3722ac816bff8cb42b8e.jpg","type":"image"},{"fileName":"Gorgeous-Royal-Blue-Mermaid-Prom-Dresses-2019-Luxury-Lace-Beaded-Ruffles-Chapel-Ruffles-Train-African-Trumpet.jpg","type":"image"},{"fileName":"IMG-20210321-WA0014.jpg","type":"image"},{"fileName":"IMG-20220612-WA0125.jpg","type":"image"},{"fileName":"IMG-20220612-WA0126.jpg","type":"image"},{"fileName":"IMG-20220612-WA0139.jpg","type":"image"},{"fileName":"IMG-20220612-WA0140.jpg","type":"image"},{"fileName":"IMG-20220612-WA0141.jpg","type":"image"},{"fileName":"IMG-20220612-WA0147.jpg","type":"image"},{"fileName":"IMG-20220612-WA0159.jpg","type":"image"},{"fileName":"IMG-20220612-WA0163.jpg","type":"image"},{"fileName":"IMG-20220612-WA0166.jpg","type":"image"},{"fileName":"IMG-20220612-WA0168.jpg","type":"image"},{"fileName":"IMG-20230512-WA0020.jpg","type":"image"},{"fileName":"IMG-20230512-WA0023.jpg","type":"image"}];
         const gallery = document.getElementById("promGallery");
+        const loadMoreBtn = document.getElementById("loadMoreBtn");
+        const ITEMS_PER_BATCH = 12;
+        let renderedCount = 0;
 
         const viewer = document.getElementById("mediaViewer");
         const viewerMediaContainer = document.getElementById("viewerMediaContainer");
@@ -246,7 +272,7 @@
             }
         });
 
-        mediaItems.forEach((itemData) => {
+        function createItem(itemData) {
             const item = document.createElement("article");
             item.className = "item";
 
@@ -264,12 +290,28 @@
                 image.src = mediaPath;
                 image.alt = "Prom Suits media";
                 image.loading = "lazy";
+                image.decoding = "async";
                 item.appendChild(image);
             }
 
             item.addEventListener("click", () => openViewer(itemData));
             gallery.appendChild(item);
-        });
+        }
+
+        function renderNextBatch() {
+            const nextCount = Math.min(renderedCount + ITEMS_PER_BATCH, mediaItems.length);
+            for (let i = renderedCount; i < nextCount; i += 1) {
+                createItem(mediaItems[i]);
+            }
+            renderedCount = nextCount;
+
+            if (renderedCount >= mediaItems.length) {
+                loadMoreBtn.style.display = "none";
+            }
+        }
+
+        loadMoreBtn.addEventListener("click", renderNextBatch);
+        renderNextBatch();
     </script>
 </body>
 </html>
