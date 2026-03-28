@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kaunda Suits collection by JORIM & CO. BESPOKE.">
+    <title>Kaunda Suits | JORIM & CO. BESPOKE</title>
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <style>
+        :root {
+            --bg: #f5f5f5;
+            --card: #ffffff;
+            --text: #1f1f1f;
+            --muted: #616161;
+            --accent: #0b5d8b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: var(--card);
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #fff;
+            background: var(--accent);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-link:hover { opacity: 0.9; }
+
+        .intro {
+            padding: 32px 6% 14px;
+            text-align: center;
+        }
+
+        .intro h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        .intro p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .gallery {
+            padding: 20px 6% 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .item {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+
+        .item img,
+        .item video {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            background: #000;
+        }
+
+        .viewer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 76px 16px 20px;
+            z-index: 1000;
+        }
+
+        .viewer.open { display: flex; }
+
+        .viewer-actions {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+            gap: 10px;
+        }
+
+        .viewer-left,
+        .viewer-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .viewer-btn {
+            border: 0;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .viewer-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .viewer img,
+        .viewer video {
+            max-width: min(100%, 980px);
+            max-height: calc(100vh - 120px);
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            background: #000;
+        }
+
+        @media (max-width: 600px) {
+            .title { font-size: 0.95rem; }
+            .back-link { padding: 8px 12px; font-size: 0.9rem; }
+            .intro h1 { font-size: 1.5rem; }
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 12px;
+            }
+            .item img,
+            .item video { height: 210px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="title">JORIM & CO. BESPOKE</div>
+        <a class="back-link" href="index.html">Back to Home</a>
+    </header>
+
+    <section class="intro">
+        <h1>Kaunda Suits Collection</h1>
+        <p>Tap any photo or video to view full screen.</p>
+    </section>
+
+    <section class="gallery" id="kaundaGallery"></section>
+
+    <div class="viewer" id="mediaViewer" aria-hidden="true">
+        <div class="viewer-actions">
+            <div class="viewer-left">
+                <a class="viewer-btn" href="index.html">Home</a>
+                <button class="viewer-btn" type="button" id="viewerBack">Back</button>
+            </div>
+            <div class="viewer-right">
+                <button class="viewer-btn" type="button" id="viewerClose">Close</button>
+            </div>
+        </div>
+        <div id="viewerMediaContainer"></div>
+    </div>
+
+    <script>
+        const folder = "images/Kaunda Suits";
+        const mediaItems = [{"fileName":"00b6af7ba43b7187b42008ba7c5fb386.jpg","type":"image"},{"fileName":"00b9ee3797efaecf329c0970c80f82b0.jpg","type":"image"},{"fileName":"06595a8e637836766b06add70251f889.jpg","type":"image"},{"fileName":"0c171a26ec265d0c8b061b963afdf6cf.jpg","type":"image"},{"fileName":"0c4bd4819b718e7701ccdd46601a8211.jpg","type":"image"},{"fileName":"1d13f64aa6673b223dec35f69da8b26f.jpg","type":"image"},{"fileName":"21d941b00aeae7e051f22d5d46c8a5f6.jpg","type":"image"},{"fileName":"21e13da6a936e51295bfa30455300ecd.jpg","type":"image"},{"fileName":"2d182c118547dc3a7480bf312b7db5bd.jpg","type":"image"},{"fileName":"39d6371938dc8c30708ecf6b974e2243.jpg","type":"image"},{"fileName":"3f433715a0857278f644b5f62a3f194e.jpg","type":"image"},{"fileName":"40e2f35244e9653d1f00dd9374329fe9.jpg","type":"image"},{"fileName":"5481ec6009a264407da328fce9624745.jpg","type":"image"},{"fileName":"60e9a028fcafe890a7d7de8696af6b74.jpg","type":"image"},{"fileName":"626e4307a6e8093d454e01280d2727df.jpg","type":"image"},{"fileName":"6277c22aec9a9f1bffe77158893b1214.jpg","type":"image"},{"fileName":"631d13de3d23864aa247a0928f664950.jpg","type":"image"},{"fileName":"6bf0fb49d57899ac827dc75293c6de91.jpg","type":"image"},{"fileName":"6c8c189061ba6ca08cff9f1e7d491b8d.jpg","type":"image"},{"fileName":"78670289e55c62e4fd176a9f784a4369.jpg","type":"image"},{"fileName":"7b7a12708141f529656ef14a56fdefd4.jpg","type":"image"},{"fileName":"7c6f4f9bf031d5ebffa73c133ce263f3.jpg","type":"image"},{"fileName":"8a210f882b238c3c519ad6f4f3c5d8ca.jpg","type":"image"},{"fileName":"8f5e63a0186197cca40065336669957b.mp4","type":"video"},{"fileName":"9373b9208f4bbc44dcc5335aa431a8b7.jpg","type":"image"},{"fileName":"93f9792eaa656a200240085768484bc6.jpg","type":"image"},{"fileName":"a00bb3fd86daa61a06e844e57711c0da.jpg","type":"image"},{"fileName":"b1325bd095ed784d7bcabdd2d522ebb6.jpg","type":"image"},{"fileName":"b199d394f6d65c6e386a30791023921e.jpg","type":"image"},{"fileName":"b1d1b278dbc27feb820d923a97e7cf16.jpg","type":"image"},{"fileName":"ba1f242a327e4665ce68355f25ff474f.jpg","type":"image"},{"fileName":"c44754e3e57a254d2513bf2d72438c69.jpg","type":"image"},{"fileName":"c6613b43fb359c78b200d74e4ecee926.jpg","type":"image"},{"fileName":"ca2da9d91ce5adb04d64b4924536fecd.jpg","type":"image"},{"fileName":"cb3732f7db752adfe1446c3a527c35c4.jpg","type":"image"},{"fileName":"ccfad6730029940f85fc89a4ae37f597.jpg","type":"image"},{"fileName":"d0612eef6118895ff725e791889871d9.jpg","type":"image"},{"fileName":"d77906ce73bbe5ee1f1a64384d34cbb8.jpg","type":"image"},{"fileName":"ddc15f33d2cc2ee5e952d2d3a19d2028.jpg","type":"image"},{"fileName":"e385362175083d90a64c26fea3a3354b.jpg","type":"image"},{"fileName":"eb127ffc31cf2913c3889801be0ca152.jpg","type":"image"},{"fileName":"eb84759deb3aa55096f0134c90369bb2.jpg","type":"image"},{"fileName":"ee7a87b78e4b4a148bb78927281d1ca3.jpg","type":"image"},{"fileName":"ef8dfdaf7c7297cfbb21c809b5cf1ac4.jpg","type":"image"},{"fileName":"f406919c3f27cd172222c9cc598c1483.jpg","type":"image"},{"fileName":"f676a1067ae4fd500eac75b94b8bba68.jpg","type":"image"}];
+        const gallery = document.getElementById("kaundaGallery");
+
+        const viewer = document.getElementById("mediaViewer");
+        const viewerMediaContainer = document.getElementById("viewerMediaContainer");
+        const viewerClose = document.getElementById("viewerClose");
+        const viewerBack = document.getElementById("viewerBack");
+
+        function openViewer(itemData) {
+            viewerMediaContainer.innerHTML = "";
+            const mediaPath = folder + "/" + itemData.fileName;
+
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                viewerMediaContainer.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Kaunda Suits media";
+                viewerMediaContainer.appendChild(image);
+            }
+
+            viewer.classList.add("open");
+            viewer.setAttribute("aria-hidden", "false");
+        }
+
+        function closeViewer() {
+            viewer.classList.remove("open");
+            viewer.setAttribute("aria-hidden", "true");
+            viewerMediaContainer.innerHTML = "";
+        }
+
+        viewerClose.addEventListener("click", closeViewer);
+        viewerBack.addEventListener("click", () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                closeViewer();
+            }
+        });
+
+        viewer.addEventListener("click", (event) => {
+            if (event.target === viewer) {
+                closeViewer();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && viewer.classList.contains("open")) {
+                closeViewer();
+            }
+        });
+
+        mediaItems.forEach((itemData) => {
+            const item = document.createElement("article");
+            item.className = "item";
+
+            const mediaPath = folder + "/" + itemData.fileName;
+
+            if (itemData.type === "video") {
+                const video = document.createElement("video");
+                video.src = mediaPath;
+                video.controls = true;
+                video.preload = "metadata";
+                video.playsInline = true;
+                item.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = mediaPath;
+                image.alt = "Kaunda Suits media";
+                image.loading = "lazy";
+                item.appendChild(image);
+            }
+
+            item.addEventListener("click", () => openViewer(itemData));
+            gallery.appendChild(item);
+        });
+    </script>
+</body>
+</html>
