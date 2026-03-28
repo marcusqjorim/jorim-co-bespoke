@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Men Suits collection by JORIM & CO. BESPOKE.">
+    <title>Men Suits | JORIM & CO. BESPOKE</title>
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <style>
+        :root {
+            --bg: #f5f5f5;
+            --card: #ffffff;
+            --text: #1f1f1f;
+            --muted: #616161;
+            --accent: #0b5d8b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: var(--card);
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #fff;
+            background: var(--accent);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-link:hover { opacity: 0.9; }
+
+        .intro {
+            padding: 32px 6% 14px;
+            text-align: center;
+        }
+
+        .intro h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        .intro p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .gallery {
+            padding: 20px 6% 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .item {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .item p {
+            margin: 0;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-align: center;
+            word-break: break-word;
+        }
+
+        @media (max-width: 600px) {
+            .title { font-size: 0.95rem; }
+            .back-link { padding: 8px 12px; font-size: 0.9rem; }
+            .intro h1 { font-size: 1.5rem; }
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 12px;
+            }
+            .item img { height: 210px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="title">JORIM & CO. BESPOKE</div>
+        <a class="back-link" href="index.html">Back to Home</a>
+    </header>
+
+    <section class="intro">
+        <h1>Men Suits Collection</h1>
+        <p>Tap any photo to view it clearly.</p>
+    </section>
+
+    <section class="gallery" id="gallery"></section>
+
+    <script>
+        const folder = "images/Men suits";
+        const images = ["01810432bcb24bcccbd8facd379deb6d.jpg","01f779cc147ebee2d02099cb6759ea3a.jpg","020a50da7721c88dac39efbd16e68e9c.jpg","05524cf33a9049dd8bfca02ea7313f11.jpg","063ee3ef2841b5877511f698e9971755.jpg","064345ebd24499f98c906bd2ec41d138.jpg","0a809bce82e7518c3861ef29e8b0e598.jpg","0bd87b94cab8c22be5506af9f7979c16.jpg","0be04ecbae77c068574ad54968a75ec9.jpg","0d3e97b23892376cab47fd8c7077c05e.jpg","0e5b3a279e1919a59ad7ac377bb0d403.jpg","10ef77371fa96c422d194a5e760706d2.jpg","10f30fdd37c395a78933fc0449e4b19a.jpg","135e53561cdeee69abd3fd7126768b7c.jpg","136b1c32590d2b77911992aa3467f38b.jpg","1878feb5fa51faff5a407604b6079110.jpg","1d1d3fd3d3f3316db1a4712da482edb8.jpg","1fbd60f3378fef7239b302e81e255315.jpg","221363ea1b70cfbd98ee251417e9553b.jpg","235eac3c498d6b7be556f756da105a9f.jpg","2ce05a7ff7a558f3238a1cec84b0306c.jpg","2f3328658371da950fcf7dd49a94bc10.jpg","307c3b66d9e3b5e671fb6307c5e8ced6.jpg","32adb3d8aada373f6e925c1fddfeee61.jpg","32e6a6a182fe32b74089a49f8cf9b574.jpg","32fab84260c415a81aa2da1856e4bc4c.jpg","3872fb366eda75a7b5d8ae7a5a366530.jpg","3b8f73f911cec09026c47d74d226186f.jpg","3ce7d7577c51dd46ba13a41626762280.jpg","3f11ac0be49b84ab9a408b771c344213.jpg","3f1c958291153dbf47a069f379004010.jpg","4e47fff13c81743ad1e5eb7aab2cd86c.jpg","4f241cfda350b39edf3464eb0d5bdae5.jpg","4f563c42e8fd136180080913e03359db.jpg","50d176f78c9b6e556b2f398d25e6b04d.jpg","5144229ed6982d704d5f83cdee558267.jpg","521f9f39502d2a644acc5a6c26dea618.jpg","568e30ac88ef95d46b3998250052a7d7.jpg","56f72aa4f88f9ee7782aae10b8e6ead8.jpg","5799151e3a9ad10be9e1969b6f7e2ff7.jpg","5b10fe94bc461d3b9624075b2419d54f.jpg","5b2341f000065e406d52461430e2fcac.jpg","5c9463f0d6262bd09d6e1af88722863a.jpg","5cd2d7fac963bb849a873398d159c8a6.jpg","5dcd9579374797cc5bfe1079375b1454.jpg","603f8a7b074a8004312ce4cd70221247.jpg","67fa31d606e6d0797df3e76424ccf220.jpg","6e1720add6196aea68ee32d38cf2bbf9.jpg","73fdf5048d6900d78da898b99ba9a632.jpg","75a2ba23e161ce9314ffbcc4a9ddab19.jpg","77eac7433850f3302559a482b71ad2ce.jpg","7b2e00cac03d2d0536f0f4b673b38362.jpg","7dd06cc38f363214915cdfd127437d7f.jpg","81543992a62cd1083ba41c41443c65cf.jpg","84e2e426dbe104e8b95fcf50da9bcfff.jpg","8714d587a2e314d12acd6623dfa85e64.jpg","88c0961775e552c75aa6f971b02717ac.jpg","89e4aa85b25f1ece3fcc2bf43ea2f715.jpg","8a1405a13fe6cc3d04d86aa0eed0873a.jpg","8b6d63e2326fc6c60380b8d54473dd94.jpg","8d5beaa0e7933ce3400cc1d0cef8d1a6.jpg","8d80a6fab696ae05db3b8e4190218009.jpg","93366b6b868a48e77f9ce8b4deac71a2.jpg","9433e22a71301c03fb4ca716bed92a98.jpg","947917dff0bf69f3ff34f6e4e5be825b.jpg","94e9e53412428bcea46105fca1b97439.jpg","97f47c06e6d699ccb919a6957524140b.jpg","987776a6988c5ff813037e541cff03c5.jpg","ad460f3d9d1d7016f6b4ff906e049edd.jpg","b03c5fc629e1fdbc7162564a6146b646.jpg","b0b5a0480f64b5e25a5a6b8ef1032096.jpg","b2bb82d17688d3537bab9e291bbdf46a.jpg","b2ce814cd960c05f44a3d3fa98e5cef0.jpg","b4be77e772ea343afb44f367b75c3ba0.jpg","b4cb0ad04438483540b3be8991a78636.jpg","b7af363aa5ef3722ac816bff8cb42b8e.jpg","bcfded8d70d2c40ac1485840c60e8693.jpg","c6b601654754e8d1450839b7aab70097.jpg","c7a492254294eaa815d23ff8d30e2421.jpg","ca1483879cd3a081d5e83331f0ea4d4e.jpg","ca5e64abeec4e76fd2f850ec994b779a (1).jpg","cb68ece4ba6d6722e97d19f760ed2c7b.jpg","cc7f1798e62531c8b9bc7d48cc90b079.jpg","cd567c2d40ee4941400f568e2bc6b681.jpg","ce4c1a40f788c52e20d4335f02ab3c61.jpg","cecc5ed4cd7713748826783b7ce58e50.jpg","d07626de549ef2084018d24f51e96fa6.jpg","d0b29a620835b37ff873cfc19e62ceb1.jpg","d190d5f636443eed6bd59aafe5601645.jpg","d7b10b8733e9921752863c2990170cb0.jpg","d80caca532ec637429fbf0858a348865.jpg","d9998f7a16ae3b6be831cf9375c4218e.jpg","dce3d46c8efefe98d2490101d071b8c2.jpg","df6cb85e9c01119a11aa65ee5616c13b.jpg","dfe67f2db1c45b648ba254b5cd948a26.jpg","dff7a91411850e340c37dd03a5fc0b97.jpg","e16338a9be29afdf15f182a1a148dbbc.jpg","e18763777952df0698150f4892beb6f6.jpg","e5430e1fd6deefb082f748f2f64f0994.jpg","ea020c553a569c68081d1c4f8d6fbdd2.jpg","eb30606b7f1f39a69341447a96a06f4f.jpg","ed117ecc506f159b7a2f1e301911d541.jpg","f2000491330d6c5ce1d2696e35f01518.jpg","f37552c08be8c3008e9dc92e0bafc5a6.jpg","f4e7d5eba1fe815ff0fba25cf8d095fa.jpg","f855c52806c0db094b55d2689d5884c7.jpg","f8ac7de8fa2b0db94c81d0ec9932d493.jpg","fa3b434be3a81112b0d32b9d56b4be92.jpg","fd6ed298b4161636167c1fe9e905a8cc.jpg","Screenshot_20250121_113506_Pinterest.png","Screenshot_20250121_113528_Pinterest.png","Screenshot_20250121_113553_Pinterest.png","Screenshot_20250121_113616_Pinterest.png","Screenshot_20250121_113633_Pinterest.png","Screenshot_20250121_113648_Pinterest.png","Screenshot_20250121_113654_Pinterest.png","Screenshot_20250121_113700_Pinterest.png","Screenshot_20250121_113706_Pinterest.png","Screenshot_20250121_113711_Pinterest.png","Screenshot_20250121_113718_Pinterest.png","Screenshot_20250121_113725_Pinterest.png","Screenshot_20250121_113733_Pinterest.png","Screenshot_20250121_113743_Pinterest.png","Screenshot_20250121_113755_Pinterest.png","Screenshot_20250121_113803_Pinterest.png","Screenshot_20250121_113815_Pinterest.png","Screenshot_20250121_113824_Pinterest.png","Screenshot_20250121_113833_Pinterest.png","Screenshot_20250121_113841_Pinterest.png","Screenshot_20250121_113847_Pinterest.png","Screenshot_20250121_113851_Pinterest.png","Screenshot_20250121_113856_Pinterest.png","Screenshot_20250121_113903_Pinterest.png","Screenshot_20250121_113908_Pinterest.png","Screenshot_20250121_113913_Pinterest.png","Screenshot_20250121_113917_Pinterest.png","Screenshot_20250121_113922_Pinterest.png","Screenshot_20250121_113926_Pinterest.png","Screenshot_20250121_113931_Pinterest.png","Screenshot_20250121_113936_Pinterest.png","Screenshot_20250121_113941_Pinterest.png","Screenshot_20250121_113946_Pinterest.png","Screenshot_20250121_113952_Pinterest.png","Screenshot_20250121_113957_Pinterest.png","Screenshot_20250121_114040_Pinterest.png","Screenshot_20250121_114113_Pinterest.png","Screenshot_20250121_114119_Pinterest.png","Screenshot_20250121_114127_Pinterest.png"];
+        const gallery = document.getElementById("gallery");
+
+        images.forEach((fileName, index) => {
+            const item = document.createElement("article");
+            item.className = "item";
+
+            const link = document.createElement("a");
+            link.href = folder + "/" + fileName;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+
+            const image = document.createElement("img");
+            image.src = folder + "/" + fileName;
+            image.alt = "Men Suits design " + (index + 1);
+            image.loading = "lazy";
+
+            const label = document.createElement("p");
+            label.textContent = "Design " + (index + 1);
+
+            link.appendChild(image);
+            item.appendChild(link);
+            item.appendChild(label);
+            gallery.appendChild(item);
+        });
+    </script>
+</body>
+</html>
