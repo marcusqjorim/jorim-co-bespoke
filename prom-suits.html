@@ -238,6 +238,9 @@
                 const image = document.createElement("img");
                 image.src = mediaPath;
                 image.alt = "Prom Suits media";
+                image.onerror = () => {
+                    closeViewer();
+                };
                 viewerMediaContainer.appendChild(image);
             }
 
@@ -284,6 +287,9 @@
                 video.controls = true;
                 video.preload = "metadata";
                 video.playsInline = true;
+                video.onerror = () => {
+                    item.remove();
+                };
                 item.appendChild(video);
             } else {
                 const image = document.createElement("img");
@@ -291,6 +297,9 @@
                 image.alt = "Prom Suits media";
                 image.loading = "lazy";
                 image.decoding = "async";
+                image.onerror = () => {
+                    item.remove();
+                };
                 item.appendChild(image);
             }
 
